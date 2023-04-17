@@ -62,14 +62,12 @@ const SidebarLeft = ({ buildingOptions, handleStartNodeChange, handleEndNodeChan
                     <input type="radio" id="yaya" name="transport" value="yaya" checked={travelType === "yaya"} onChange={handleTravelTypeChange} />
                     <img src="assets/logos/yaya-logo.png" alt="Yaya" />
                   </label>
-                  <label htmlFor="araba">
-                    <input type="radio" id="araba" name="transport" value="araba" checked={travelType === "araba"} onChange={handleTravelTypeChange} />
-                    <img src="assets/logos/araba-logo.png" alt="Araba" />
-                  </label>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <label htmlFor="engelli">
                     <input type="radio" id="engelli" name="transport" value="engelli" checked={travelType === "engelli"} onChange={handleTravelTypeChange} />
                     <img src="assets/logos/engelli-logo.png" alt="Engelli" />
                   </label>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
                   <label htmlFor="bisiklet">
                     <input type="radio" id="bisiklet" name="transport" value="bisiklet" checked={travelType === "bisiklet"} onChange={handleTravelTypeChange} />
                     <img src="assets/logos/bisiklet-logo.png" alt="Bisiklet" />
