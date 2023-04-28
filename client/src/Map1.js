@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import L, { Icon } from 'leaflet';
-import { MapContainer, TileLayer, Polyline, useMap, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Polyline, useMap, Marker, Popup, } from 'react-leaflet';
 
 
 function ChangeView({ center, zoom, bounds }) {
@@ -15,7 +15,7 @@ function ChangeView({ center, zoom, bounds }) {
   return null;
 }
 
-function MapComponent({ routeGeometry }) {
+function MapComponent({ routeGeometry,userLat, userLng  }) {
   const center = [39.86559212247091, 32.73417273791947];
   const zoom = 17;
 
@@ -38,6 +38,14 @@ function MapComponent({ routeGeometry }) {
     iconAnchor: [12.5, 30],
     popupAnchor: [0, -41],
   });
+  const currentLocationIcon = new Icon({
+    iconUrl: 'assets/logos/full-moon.png',
+    iconSize: [15, 15],
+    iconAnchor: [12.5, 30],
+    popupAnchor: [0, -41],
+  });
+
+
 
   return (
     <MapContainer center={center} zoom={zoom} style={{ width: '100%', height: '100%' }}>
@@ -63,6 +71,11 @@ function MapComponent({ routeGeometry }) {
           <Popup>
             <span>Bitiş Noktası</span>
           </Popup>
+        </Marker>
+      )}
+      {userLat && userLng && (
+        <Marker position={[userLat, userLng]} icon= {currentLocationIcon}>
+          <Popup>Şu an Buradasınız.</Popup>
         </Marker>
       )}
     </MapContainer>

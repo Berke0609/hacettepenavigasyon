@@ -11,7 +11,7 @@
   left: calc(288px + 72px + 20px);
   border-radius: 10px;
   margin-bottom: 0px;
-  transition: 0.5s ease-out;
+  transition: 0.2s ease-out;
   color: whitesmoke;
   pointer-events: auto;
   font-family: "Encode Sans", sans-serif;
@@ -67,4 +67,40 @@
     height: 35px;
     cursor: pointer;
   }
+
+
+  @media only screen and (max-width: 600px) {
+    /*
+      @media only screen and (max-device-width: 600px) {
+          #title {
+              font-size: 50px;
+              word-break: break-all;
+          }
+     
+     }*/
+     #githubIcon {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+    }
+  
+
+     #startMarker {
+      width: 20px;
+      height: 20px;
+      margin: 20px;
+    }
+    
+    #endMarker {
+      width: 20px;
+      height: 20px;
+      margin: 20px;
+    }
+    
+
+     .horizontalBar {
+    font-size: 9px;
+    }
+  }
+
   

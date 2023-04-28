@@ -5,6 +5,9 @@
     width: 72px;
     text-align: center;
     left: calc(293px + 10px);
+    z-index: 1;
+    transition: left 0.3s;
+    
   }
   
 
@@ -48,4 +51,18 @@
     60% {
       transform: translateY(-5px);
     }
+}
+
+.sidebarRight.is-closed {
+  left: 0;
+}
+
+
+@media (max-width: 768px) {
+  .sidebarRight {
+    left: 0;
+    top: 10px; /* Adjust this value based on your desired position */
+    width: 1%;
+    height: auto;
+  }
 }

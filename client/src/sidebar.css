@@ -22,6 +22,7 @@
   transition: 0.5s;
   pointer-events: auto;
   font-family: "Encode Sans", sans-serif;
+  transition: width 0.3s;
   
 }
 
@@ -234,4 +235,19 @@
 
 
 
+#sidebarLeft.closed {
+  width: 0;
+}
 
+#uw-wordmark-container {
+  width: 120px;
+  margin-bottom: 0px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+
+#uw-wordmark {
+  width: 120px;
+}

@@ -5,9 +5,12 @@ import { useState } from 'react';
 import './sidebarright.css'
 import './horizontalbar.css'
 
-const SidebarLeft = ({ buildingOptions, handleStartNodeChange, handleEndNodeChange, handleCalculateRoute, handleTravelTypeChange, travelType}) => {
+
+const SidebarLeft = ({ isOpen,buildingOptions, handleStartNodeChange, handleEndNodeChange, handleCalculateRoute, handleTravelTypeChange, travelType}) => {
 
   const [activeSection, setActiveSection] = useState('');
+  
+  
 
   const toggleSection = (section) => {
     if (activeSection === section) {
@@ -16,16 +19,17 @@ const SidebarLeft = ({ buildingOptions, handleStartNodeChange, handleEndNodeChan
       setActiveSection(section);
     }
   };
- 
 
-  
+
+ 
     
   return (
-        <div id="sidebarLeft">
+        <div id="sidebarLeft" style={{ width: isOpen ? '288px' : '0px', opacity: isOpen ? 1 : 0 }}>
           <div id="titleElements">
             <h1 id="title">Harita Hacettepe</h1>
             <span id="title-slant" className="uw-slant-large"></span>
           </div>
+       
           <div id="nav-header-container">
             <h5 id="navHeader" className="header">ROTA PLANLAYICI</h5>
             <img
@@ -79,88 +83,10 @@ const SidebarLeft = ({ buildingOptions, handleStartNodeChange, handleEndNodeChan
             </button>
           </div>
 
-          {/* Binalar */}
-          <h6 id="buildingsHeader" className="header" onClick={() => toggleSection('binalar')}>
-            BİNALAR
-          </h6>
-          <span className="uw-slant"></span>
-          <div id="buildingsSection" className={`contentSection ${activeSection === 'binalar' ? 'is-expanded' : 'is-collapsed'}`}>
-            {activeSection === 'binalar' && (
-              <>
-                <input type="text" className="searchBar" id="buildingsSearch" placeholder="Bina Arayın..." />
-                <div id="building-container" className="vertical-menu">
-                  {/* [Dynamically Added] */}
-                </div>
-              </>
-            )}
+         
           </div>
-
-          {/* Yemekhane */}
-          <h6 id="buildingsHeader" className="header" onClick={() => toggleSection('yemekhaneler')}>
-            YEMEKHANELER
-          </h6>
-          <span className="uw-slant"></span>
-          <div id="buildingsSection" className={`contentSection ${activeSection === 'yemekhaneler' ? 'is-expanded' : 'is-collapsed'}`}>
-            {activeSection === 'yemekhaneler' && (
-              <>
-                <input type="text" className="searchBar" id="buildingsSearch" placeholder="Bina Arayın..." />
-                <div id="building-container" className="vertical-menu">
-                  {/* [Dynamically Added] */}
-                </div>
-              </>
-            )}
-          </div>
-          {/* Kütüphane */}    
-          <h6 id="buildingsHeader" className="header" onClick={() => toggleSection('Kütüphaneler')}>
-            KÜTÜPHANELER
-          </h6>
-          <span className="uw-slant"></span>
-          <div id="buildingsSection" className={`contentSection ${activeSection === 'Kütüphaneler' ? 'is-expanded' : 'is-collapsed'}`}>
-            {activeSection === 'Kütüphaneler' && (
-              <>
-                <input type="text" className="searchBar" id="buildingsSearch" placeholder="Bina Arayın..." />
-                <div id="building-container" className="vertical-menu">
-                  {/* [Dynamically Added] */}
-                </div>
-              </>
-            )}
-          </div>
-          
+         
    
-      
-    
-    <div className="sidebarRight">
-      <img id="logo" src="assets/logos/55.png" alt="" />
-    </div>
-
-    <div id="horizontalBarId" className="horizontalBar">
-      <img id="startMarker" className="marker" alt="Start Point Icon" src="assets/markerIcons/location-pin.png" />
-      <p id="from" className="tofrom">Başlangıç Noktası</p>
-    <div className="horizontalSpacer"></div>
-      <img id="endMarker" className="marker" alt="End Point Icon" src="assets/markerIcons/route_2.png" />
-      <p id="to" className="tofrom">Varış Noktası</p>
-    <div className="bar">  </div>
-      <div id="distance"> Seyahat Tipi: {travelType}  </div>
-
-    <div id="locationIconDiv" title="Hacettepe Üniversitesi">
-      <a href ="https://www.hacettepe.edu.tr/" aria-label="Hacettepe Üniversitesi" target="_blank" rel="noreferrer">
-        <img id="locationIcon" src="assets/miscIcons/hu_logo.svg" alt="//:0"></img>
-      </a>
-    </div>
-    <div className="githubIconDiv" title="Proje GitHub Sayfası">
-      <a href ="https://github.com/banbar/harita.hacettepe.edu.tr" aria-label="Proje GitHub Sayfası" target="_blank" rel="noreferrer">
-        <img alt="GitHub Icon" src="assets/miscIcons/GithubIcon.png" id="githubIcon" ></img>
-      </a>
-      
-    </div> 
-    
-    </div>
-
-
-    
-  </div>
- 
- 
   );
 };
 

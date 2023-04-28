@@ -1,11 +1,13 @@
   import MapComponent from "./Map1";
-  import React, { useEffect, useState } from 'react';
+  import React, { useEffect, useState, useMemo} from 'react';
   import  Dijkstra  from './Dijkstra';
   import './index.css';
   import './Map.css';
   import SidebarLeft from './SidebarLeft';
   import axios from 'axios';
-
+  import SidebarRight from "./SidebarRight";
+  import HorizontalBar from "./HorizontalBar";
+  import haversineDistance from 'haversine-distance';
 
   const App = () => {
     const [nodes, setNodes] = useState([]);
@@ -15,14 +17,18 @@
     const [endNode, setEndNode] = useState(null);
     const [route, setRoute] = useState([]);
     const [routeGeometry,setRouteGeometry]= useState([]);
-    const [travelType, setTravelType] = useState([]);
+    const [travelType, setTravelType] = useState("yaya");
+    const [isOpen, setIsOpen] = useState(true);
+    const [userLat, setUserLat] = useState(null);
+    const [userLng, setUserLng] = useState(null);
+    const [isStartNodeCurrentLocation, setIsStartNodeCurrentLocation] = useState(false);
+
+  
 
     const axiosInstance = axios.create({baseURL:process.env.REACT_APP_API_URL,});
-
-
     const getNodes = async () => {
       try {
-        const response = await axiosInstance.get("http://localhost:8000/beytepenodesrev5");
+        const response = await axiosInstance.get("beytepenodesrev5");
         const json = response.data;
         const nodes = json.map((row) => ({
           id: row.node_id,
@@ -40,7 +46,7 @@
     
     const getLines = async () => {
       try {
-        const response = await axiosInstance.get("http://localhost:8000/beytepe_roads_rev2");
+        const response = await axiosInstance.get("beytepe_roads_rev2");
         const json = response.data;
         const lines = json.map((row) => ({
           start: row.start_id,
@@ -59,7 +65,7 @@
     
     const getBuildings = async () => {
       try {
-        const response = await axiosInstance.get("http://localhost:8000/binalar");
+        const response = await axiosInstance.get("binalar");
         const json = response.data;
         const binalar = json
           .map((row) => ({
@@ -78,11 +84,17 @@
       getLines();
       getBuildings();
     }, []);
-
     const handleStartNodeChange = (selectedOption) => {
-      setStartNode(selectedOption.value);
-      const selectedBuilding = binalar.find((bina) => bina.id === parseInt(selectedOption.value));
-      document.getElementById("from").textContent = selectedBuilding.name;
+      console.log("Selected option: ", selectedOption);
+      if (selectedOption.value === "Konumum") {
+        setIsStartNodeCurrentLocation(true);
+        document.getElementById("from").textContent = selectedOption.value;
+      } else {
+        setIsStartNodeCurrentLocation(false);
+        setStartNode(selectedOption.value);
+        const selectedBuilding = binalar.find((bina) => bina.id === parseInt(selectedOption.value));
+        document.getElementById("from").textContent = selectedBuilding.name;
+      }
     };
   
     const handleEndNodeChange = (selectedOption) => {
@@ -139,14 +151,76 @@
     
       return routeGeometry;
     };
+    const buildingOptions = useMemo(() => [
+      {
+        value: "Konumum",
+        label: "Konumum",
+      },
+      ...binalar.map((bina) => ({
+        value: bina.id,
+        label: bina.name,
+      })),
+    ], [binalar]);
 
-    const buildingOptions = binalar.map((bina) => ({
-      value: bina.id,
-      label: bina.name,
-    }));
+    const toggleSidebar = () => {
+      setIsOpen(!isOpen);
+    };
 
-    return (
+    useEffect(() => {
+      let watcher = null;
+      
+      if (isStartNodeCurrentLocation && navigator.geolocation) {
+        watcher = navigator.geolocation.watchPosition(
+          (position) => {
+            setUserLat(position.coords.latitude);
+            setUserLng(position.coords.longitude);
+            console.log("User position: ", position.coords.latitude, position.coords.longitude);
+
+            const nearestNode = getNearestNode(position.coords.latitude, position.coords.longitude);
+            setStartNode(nearestNode.id);
+            handleCalculateRoute();
+          },
+          (error) => {
+            console.error("Geolocation error: ", error);
+          }
+        );
+      }
+      
+      return () => {
+        if (watcher) {
+          navigator.geolocation.clearWatch(watcher);
+        }
+      };
+    }, [isStartNodeCurrentLocation]);
   
+    const getNearestNode = () => {
+      let minDistance = Infinity;
+      let nearestNode = null;
+  
+      nodes.forEach((node) => {
+        const distance = getDistance(userLat, userLng, node.latitude, node.longitude);
+        if (distance < minDistance) {
+          minDistance = distance;
+          nearestNode = node;
+        }
+      });
+  
+      return nearestNode;
+    };
+  
+    useEffect(() => {
+      if (isStartNodeCurrentLocation && userLat && userLng && nodes.length > 0) {
+        const nearestNode = getNearestNode();
+        setStartNode(nearestNode.id);
+      }
+    }, [isStartNodeCurrentLocation, userLat, userLng, nodes]);
+    
+    const getDistance = (lat1, lng1, lat2, lng2) => {
+      return haversineDistance({lat: lat1, lng: lng1}, {lat: lat2, lng: lng2});
+    };
+    
+  
+    return (
       <div>
         <MapComponent
         nodes={nodes}
@@ -155,9 +229,11 @@
         startNode={startNode}
         endNode={endNode}
         routeGeometry={routeGeometry}
+        userLat= {userLat}
+        userLng= {userLng}
       />
-    
-      <SidebarLeft 
+      <SidebarLeft
+      isOpen={isOpen} 
       buildingOptions={buildingOptions}
       handleStartNodeChange={handleStartNodeChange}
       handleEndNodeChange={handleEndNodeChange}
@@ -166,9 +242,24 @@
       travelType={travelType}
 
       />
-    
-    
+     <SidebarRight isOpen={isOpen} onClick={toggleSidebar} />
+     <HorizontalBar isOpen={isOpen}
+      travelType={travelType} />
+
+    <button onClick={() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+          setUserLat(position.coords.latitude);
+          setUserLng(position.coords.longitude);
+          console.log("Button - User position: ", position.coords.latitude, position.coords.longitude);
+        });
+      }}
+    >
+      Use My Location
+    </button> 
+
     </div>
+
+    
   );
 };
 
