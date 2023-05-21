@@ -28,7 +28,7 @@
     const axiosInstance = axios.create({baseURL:process.env.REACT_APP_API_URL,});
     const getNodes = async () => {
       try {
-        const response = await axiosInstance.get("beytepenodesrev5");
+        const response = await axiosInstance.get("http://localhost:8000/beytepenodesrev5");
         const json = response.data;
         const nodes = json.map((row) => ({
           id: row.node_id,
@@ -46,7 +46,7 @@
     
     const getLines = async () => {
       try {
-        const response = await axiosInstance.get("beytepe_roads_rev2");
+        const response = await axiosInstance.get("http://localhost:8000/beytepe_roads_rev2");
         const json = response.data;
         const lines = json.map((row) => ({
           start: row.start_id,
@@ -65,7 +65,7 @@
     
     const getBuildings = async () => {
       try {
-        const response = await axiosInstance.get("binalar");
+        const response = await axiosInstance.get("http://localhost:8000/binalar");
         const json = response.data;
         const binalar = json
           .map((row) => ({
